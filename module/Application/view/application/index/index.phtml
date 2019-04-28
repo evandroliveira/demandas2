@@ -1,74 +1,88 @@
-<div class="jumbotron">
-    <h1>Welcome to <span class="zf-green">Zend Framework</span></h1>
+<?php
+use Application\Model\Solicitante;
+use Application\Model\Assunto;
 
-    <p>
-        Congratulations! You have successfully installed the
-        <a href="https://github.com/zendframework/ZendSkeletonApplication" target="_blank">ZF Skeleton Application</a>.
-        You are currently running Zend Framework version <?= \Application\Module::VERSION ?>.
-        This skeleton can serve as a simple starting point for you to begin
-        building your application on ZF.
-    </p>
-
-    <p><a class="btn btn-success btn-lg" href="https://github.com/zendframework/zendframework" target="_blank">Fork Zend Framework on GitHub &raquo;</a></p>
-</div>
-
-<div class="row">
-
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Follow Development</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    Zend Framework is under active development. If you are
-                    interested in following the development of ZF, you can check
-                    <a href="http://framework.zend.com/blog/">ZF dev blog</a>,
-                    and <a href="https://github.com/issues?utf8=%E2%9C%93&amp;q=is:issue+org:zendframework">ZF issue tracker</a>
-                    (link requires a GitHub account). This is a great resource
-                    for staying up to date with the latest developments!
-                </p>
-
-                <p><a class="btn btn-success pull-right" href="http://framework.zend.com/" target="_blank">ZF Development Portal &raquo;</a></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Discover Modules</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    The community is working on developing a community site to
-                    serve as a repository and gallery for ZF modules. The
-                    project is available <a href="https://github.com/zendframework/modules.zendframework.com">on GitHub</a>.
-                    The site is currently live and currently contains a list of
-                    some of the modules already available for ZF.
-                </p>
-
-                <p><a class="btn btn-success pull-right" href="http://modules.zendframework.com/" target="_blank">Explore ZF Modules &raquo;</a></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Help &amp; Support</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    If you need any help or support while developing with ZF,
-                    you may reach us via IRC: <a href="irc://irc.freenode.net/zftalk">#zftalk on Freenode</a>.
-                    We'd love to hear any questions or feedback you may have
-                    regarding this release. Alternatively, you may subscribe
-                    and post questions to the <a href="http://framework.zend.com/archives/">mailing lists</a>.
-                </p>
-
-                <p><a class="btn btn-success pull-right" href="http://webchat.freenode.net?channels=zftalk" target="_blank">Ping us on IRC &raquo;</a></p>
-            </div>
-        </div>
-    </div>
-</div>
+$_SESSION['dados'] = ($_SESSION['dados'] ?? []);
+$solicitante = $_SESSION['dados']['solicitante'] ?? new Solicitante([]);
+$assunto = $_SESSION['dados']['assunto'] ?? new Assunto([]);
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Atendimento a Demandas</title>
+</head>
+<body>
+	<h3>Sistema de Atendimento a Demandas</h3>
+	<?php
+	if (isset($_SESSION['mensagem'])) :
+?>
+<p><?=$_SESSION['mensagem']?></p>			    
+<?php
+        unset($_SESSION['mensagem']);
+	endif;	
+	?>
+	<div class="container">
+	<form method="post" action="<?=$this->url('application',['action' => 'processar'])?>">
+		<table>
+			<tr>
+				<td>CPF:</td>
+				<td><input type="text" class="form-control" name="cpf" autofocus="autofocus" maxlength="11" value="<?=$solicitante->cpf?>"/></td>
+			</tr>
+			<tr>
+				<td>Nome do solicitante:</td>
+				<td><input type="text" class="form-control"  name="nome" value="<?=$solicitante->nome?>"/></td>
+			</tr>
+			<tr>
+				<td>CEP:</td>
+				<td><input type="text" class="form-control"  name="cep" value="<?=$solicitante->cep?>" maxlength="8" /></td>
+			</tr>
+			<tr>
+				<td>Município:</td>
+				<td><input type="text" class="form-control"  name="municipio" value="<?=$solicitante->municipio?>"/></td>
+			</tr>
+			<tr>
+				<td>UF:</td>
+				<td><input type="text" class="form-control"  name="uf" value="<?=$solicitante->uf?>" maxlength="2"/></td>
+			</tr>
+			</td>
+			<tr>
+				<td>E-mail:</td>
+				<td><input type="email" class="form-control"  name="email" value="<?=$solicitante->email?>"/></td>
+			</tr>
+			<tr>
+				<td>DDD:</td>
+				<td><input type="number" class="form-control"  name="ddd" value="<?=$solicitante->ddd?>" maxlength="2"/></td>
+			</tr>
+			<tr>
+				<td>Telefone:</td>
+				<td><input type="text" class="form-control"  name="telefone" value="<?=$solicitante->telefone?>"/></td>
+			</tr>
+			<tr>
+				<td>Assunto:</td>
+				<td><input type="text" class="form-control"  name="assunto" value="<?=$assunto->assunto?>"/></td>
+			</tr>
+		</table>
+		Detalhes:<br/>
+		<textarea name="detalhes" class="form-control"  style="width:500px;" rows="10" cols="50">
+<?=$assunto->detalhes?>		
+</textarea><br/>
+<?php
+if (isset($_SESSION['dados']['detalhes_gravados'])):
+?>
+<p>Foi encontrado um assunto igual na base de demandas com estes detalhes:</p>
+<p>
+<?=$_SESSION['dados']['detalhes_gravados']?>
+</p>
+<?php
+    unset($_SESSION['dados']['detalhes_gravados']);
+endif;
+?>   
+		<input class="btn btn-success btn-lg" type="submit" value="gravar" />
+	</form>
+	</div>
+</body>
+</html>
+<?php
+$_SESSION['dados'] = [];
+?>

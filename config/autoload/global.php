@@ -10,7 +10,18 @@
  * control, so do not include passwords or other sensitive information in this
  * file.
  */
+use Zend\Db\Adapter\AdapterServiceFactory;
 
 return [
-    // ...
+    //informações para conexao com o banco
+    'db' => [
+        'database' => 'alfa',
+        'driver' => 'Pdo_Mysql',
+        'host' => 'localhost'
+    ],
+    'Service_manager' => [
+        'factories' =>   [
+            'DbAdapter' => AdapterServiceFactory::class
+        ]       //conjunto de fabricas
+    ]
 ];

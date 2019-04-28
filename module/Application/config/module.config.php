@@ -4,13 +4,11 @@
  * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-
 namespace Application;
-
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
-use Zend\ServiceManager\Factory\InvokableFactory;
-
+use Application\Controller\IndexControllerFactory;
+use Application\Model\SolicitanteTableFactory;
 return [
     'router' => [
         'routes' => [
@@ -38,7 +36,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => InvokableFactory::class,
+            Controller\IndexController::class => IndexControllerFactory::class,
         ],
     ],
     'view_manager' => [
@@ -57,4 +55,16 @@ return [
             __DIR__ . '/../view',
         ],
     ],
+    'service_manager' => [
+        'factories' => [
+            'SolicitanteTable' => SolicitanteTableFactory::class
+        ]
+    ]     
+    
+    
+    
+    
+    
+    
+    
 ];
